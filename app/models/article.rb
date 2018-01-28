@@ -6,6 +6,8 @@ class Article < ActiveRecord::Base
   enum status: [:submited, :approved, :rejected]
   enum tags: [:begginer, :intermediate, :advanced]
   validates :link, uniqueness: true, presence: true
+  after_create :chek_atributes
+
 
   before_create :parse_link
   before_create :set_issue
@@ -101,5 +103,9 @@ class Article < ActiveRecord::Base
 
   def set_issue
     self.issue = Issue.current_issue
+  end
+
+  def chek_atributes
+    destroy if title.nil? || description.nil?
   end
 end
